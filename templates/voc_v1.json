@@ -1,30 +1,21 @@
 {
   "name": "voc_v1",
-  "background": {
-    "mode": "blurred_image",
-    "blur": 32,
-    "scale": 1.18,
-    "brightness": 0.82
-  },
-  "foreground_image": {
-    "fit": "contain",
-    "max_width_ratio": 0.92,
-    "max_height_ratio": 0.62
-  },
-  "safe_area": {
-    "top_ratio": 0.08,
-    "bottom_ratio": 0.16,
-    "left_ratio": 0.06,
-    "right_ratio": 0.06
-  },
-  "branding": {
-    "logo": "assets/branding/logo.png",
-    "closing_text": "VALE O CLIQUE?",
-    "closing_sfx": "assets/sfx/cursor_click.wav"
-  },
+  "safe_area": {"left_ratio": 0.07, "right_ratio": 0.07, "top_ratio": 0.07, "bottom_ratio": 0.15},
+  "background": {"mode": "blurred_image", "blur": 30, "brightness": 0.72, "contrast": 0.90},
+  "foreground": {"mode": "contain", "max_width_ratio": 0.90, "max_height_ratio": 0.58, "center_y_ratio": 0.45},
+  "logo": {"file": "logo.png", "top_ratio": 0.035, "max_width_ratio": 0.22},
+  "text_primary": {"size": 58, "min_size": 30, "color": [255, 255, 255], "stroke_color": [0, 0, 0], "stroke_width": 4},
+  "text_secondary": {"size": 38, "min_size": 24, "color": [255, 230, 0], "stroke_color": [0, 0, 0], "stroke_width": 3},
+  "cta": {"text": "VALE O CLIQUE?", "height_ratio": 0.095, "background_color": [255, 210, 0], "text_style": {"size": 48, "min_size": 30, "color": [20, 20, 20], "stroke_color": [255, 255, 255], "stroke_width": 0}},
   "audio": {
     "narration_requested_db_min": 30,
     "narration_requested_db_max": 40,
-    "normalization_metric": null
+    "normalization_metric": null,
+    "narration_gain_db": 0.0,
+    "music_gain_db": -22.0,
+    "sfx_gain_db": -8.0,
+    "end_click": "cursor_click.wav",
+    "end_click_lead": 0.22,
+    "note": "A faixa 30-40 dB permanece como requisito de calibracao; dB isolado nao define peak/RMS/LUFS, portanto a V0.1 nao forca normalizacao arbitraria."
   }
 }
