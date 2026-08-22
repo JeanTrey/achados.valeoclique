@@ -18,26 +18,37 @@ def _resolve_image(project: LoadedProject, scene) -> Path:
     return path
 
 
-def _branding(canvas: Image.Image, project: LoadedProject) -> None:
+def _logo(canvas: Image.Image, project: LoadedProject) -> None:
     width, height = canvas.size
-    template = project.template
-    cta = template.get("cta", {})
-    cta_h = int(height * float(cta.get("height_ratio", .095)))
-    y = height - cta_h
-    draw = ImageDraw.Draw(canvas)
-    fill = tuple(cta.get("background_color", [255, 210, 0])) + (235,)
-    draw.rounded_rectangle((int(width * .05), y - int(height * .035), int(width * .95), height - int(height * .035)), radius=int(width * .035), fill=fill)
-    draw_text_block(canvas, cta.get("text", "VALE O CLIQUE?"), (int(width * .09), y - int(height * .03), int(width * .91), height - int(height * .04)), cta.get("text_style", {}), 255, project.root / "assets/fonts")
-    logo_cfg = template.get("logo", {})
+    logo_cfg = project.template.get("logo", {})
     logo_file = logo_cfg.get("file")
-    if logo_file:
-        path = project.root / "assets/branding" / logo_file
-        if path.is_file():
-            with Image.open(path) as source:
-                logo = source.convert("RGBA")
-            max_width = int(width * float(logo_cfg.get("max_width_ratio", .22)))
-            logo.thumbnail((max_width, int(height * .12)), Image.Resampling.LANCZOS)
-            canvas.alpha_composite(logo, ((width - logo.width) // 2, int(height * float(logo_cfg.get("top_ratio", .035)))))
+    if not logo_file:
+        return
+    path = project.root / "assets/branding" / logo_file
+    if not path.is_file():
+        return
+    with Image.open(path) as source:
+        logo = source.convert("RGBA")
+    max_width = int(width * float(logo_cfg.get("max_width_ratio", .18)))
+    logo.thumbnail((max_width, int(height * .10)), Image.Resampling.LANCZOS)
+    canvas.alpha_composite(logo, ((width - logo.width) // 2, int(height * float(logo_cfg.get("top_ratio", .025)))))
+
+
+def _final_cta(canvas: Image.Image, project: LoadedProject, text: str, alpha: int) -> None:
+    width, height = canvas.size
+    cta = project.template.get("cta", {})
+    draw = ImageDraw.Draw(canvas)
+    top = int(height * .69)
+    bottom = int(height * .82)
+    fill = tuple(cta.get("background_color", [255, 210, 0])) + (min(245, alpha),)
+    draw.rounded_rectangle((int(width*.08), top, int(width*.92), bottom), radius=int(width*.045), fill=fill)
+    draw_text_block(canvas, text, (int(width*.12), top+8, int(width*.88), bottom-8), cta.get("text_style", {}), alpha, project.root / "assets/fonts")
+
+
+def _scene_role(scene) -> str:
+    notes = scene.notes or ""
+    marker = "role="
+    return notes.split(marker, 1)[1].split(";", 1)[0].strip() if marker in notes else "feature"
 
 
 def render_frame(project: LoadedProject, timeline_scene: TimelineScene, frame_no: int) -> Image.Image:
@@ -45,14 +56,24 @@ def render_frame(project: LoadedProject, timeline_scene: TimelineScene, frame_no
     local = (frame_no - timeline_scene.start_frame) / max(1, timeline_scene.end_frame - timeline_scene.start_frame - 1)
     scale, pan_x, pan_y = motion(scene.animation, local)
     canvas = compose_product_frame(open_rgb(_resolve_image(project, scene)), (project.config.width, project.config.height), project.template, scale, pan_x, pan_y)
-    _branding(canvas, project)
+    _logo(canvas, project)
     safe = project.template.get("safe_area", {})
     width, height = canvas.size
     left = int(width * float(safe.get("left_ratio", .07)))
     right = width - int(width * float(safe.get("right_ratio", .07)))
     alpha = text_alpha(local, scene.animation)
-    draw_text_block(canvas, scene.text_primary, (left, int(height * .67), right, int(height * .80)), project.template.get("text_primary", {}), alpha, project.root / "assets/fonts")
-    draw_text_block(canvas, scene.text_secondary, (left, int(height * .79), right, int(height * .86)), project.template.get("text_secondary", {}), alpha, project.root / "assets/fonts")
+    role = _scene_role(scene)
+    if role == "cta":
+        _final_cta(canvas, project, scene.text_primary or "VALE O CLIQUE?", alpha)
+    else:
+        style = dict(project.template.get("text_primary", {}))
+        if role == "hook":
+            style.update(project.template.get("hook_text", {}))
+        elif role == "price":
+            style.update(project.template.get("price_text", {}))
+        box = (left, int(height * .68), right, int(height * (.84 if role == "price" else .80)))
+        draw_text_block(canvas, scene.text_primary, box, style, alpha, project.root / "assets/fonts")
+        draw_text_block(canvas, scene.text_secondary, (left, int(height*.80), right, int(height*.86)), project.template.get("text_secondary", {}), alpha, project.root / "assets/fonts")
     return canvas.convert("RGB")
 
 
