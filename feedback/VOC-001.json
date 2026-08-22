@@ -1,0 +1,31 @@
+{
+  "video_id": "VOC-001",
+  "review_type": "human",
+  "status": "rejected_for_quality",
+  "scores": {
+    "overall": 2,
+    "hook": 2,
+    "pacing": 2,
+    "design": 2,
+    "narration": 1,
+    "sfx": 2,
+    "cta": 2,
+    "retention_perceived": 2
+  },
+  "reject": [
+    "narration overlap",
+    "too much narration",
+    "fonts colors and sizes feel unsynchronized",
+    "woosh on image changes feels strange",
+    "opening lacks a hook",
+    "opening feels like the ad already started in the middle",
+    "video looks too much like an automated slideshow"
+  ],
+  "keep": [
+    "vertical 9:16 composition",
+    "blurred source-image background concept",
+    "real product imagery as factual anchor",
+    "final VALE O CLIQUE identity"
+  ],
+  "notes": "Human review is authoritative for creative quality. Technical success does not equal approval."
+}
