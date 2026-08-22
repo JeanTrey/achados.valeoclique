@@ -10,14 +10,16 @@ class RetentionReport:
 
 
 def _creative_duration(scene: dict) -> float:
-    # TTS may expand the rendered scene to protect intelligibility. Retention
-    # should judge the intended edit separately, otherwise a slow TTS provider
-    # falsely turns a good 1.3 s hook into a failed 3 s hook.
     return float(scene.get("creative_duration", scene.get("duration", 0)))
 
 
 def audit_script(script: dict) -> RetentionReport:
-    """Static preflight gate for known bad creative patterns."""
+    """Static preflight gate for known bad creative patterns.
+
+    Structural problems block rendering. Source scarcity and moderate TTS
+    expansion remain visible warnings because they need human/asset follow-up,
+    not a dead pipeline.
+    """
     scenes = script.get("scenes", [])
     issues: list[str] = []
     if not scenes:
@@ -50,6 +52,9 @@ def audit_script(script: dict) -> RetentionReport:
         issues.append("final CTA is missing")
 
     score = max(0, 100 - len(issues) * 12)
-    warning_only = {"single source image repeated across the whole ad"}
+    warning_only = {
+        "single source image repeated across the whole ad",
+        "narration expands the edit too much; shorten spoken copy",
+    }
     blocking = [x for x in issues if x not in warning_only]
     return RetentionReport(score, tuple(issues), not blocking and score >= 76)
