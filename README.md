@@ -1,53 +1,42 @@
-# Vale o Clique
+# Vale o Clique Video Engine V0.1
 
-Repositório do projeto **Vale o Clique**, iniciando pelo **Vale o Clique Video Engine V0.1**.
+Motor programático para transformar **dados + roteiro + imagens + áudio** em MP4 vertical publicável. Não automatiza CapCut.
 
-## Escopo atual
+## Status
 
-A V0.1 resolve apenas:
+Pipeline implementado: loader/validação → timeline determinística → composição 9:16 → background blur → imagem `contain` → textos adaptativos → branding/CTA → animações sutis → mix de narração/música/SFX → H.264/AAC.
 
-**input de produto -> MP4 publicável**
+Preset atual: **720×1280, 30 FPS**. O preset 1080×1920 existe apenas para migração futura.
 
-A Foundation separa dados factuais (`product.json`), roteiro (`script.json`), template visual e configuração de exportação. O renderer visual ainda não faz parte desta etapa.
-
-## Preset de desenvolvimento
-
-- 720x1280
-- 30 FPS
-- H.264 / yuv420p
-- AAC
-
-O preset 1080x1920 fica preparado para uma fase posterior, sem mudar a arquitetura.
-
-## Validar um produto
+## Executar
 
 ```bash
+python -m pip install -r requirements.txt
 python render.py VOC-001 --validate-only
+python render.py VOC-001
 ```
 
-Resultado esperado na Foundation:
-
-```text
-OK VOC-001: 1 scene(s), 3.000s, 720x1280@30fps, template=voc_v1
-```
+`VOC-001` ainda exige os assets reais em `products/VOC-001/images/` e, opcionalmente, `audio/`. O engine não inventa dados ausentes.
 
 ## Testes
 
 ```bash
-python -m pip install -r requirements.txt
 pytest -q
 ```
 
+O teste end-to-end gera um vídeo sintético curto e verifica H.264, AAC, `yuv420p` e dimensões. GitHub Actions também executa compile, validação, testes e auditoria contra hardcode editorial.
+
+## Áudio
+
+A solicitação de narração “30 a 40 dB” foi preservada como requisito de calibração. Como dB isolado não define uma métrica digital (peak/RMS/LUFS), a V0.1 não aplica normalização destrutiva arbitrária. O ganho de narração é configurável no template; música e SFX permanecem abaixo dela. Quando `assets/sfx/cursor_click.wav` existe, ele é automaticamente posicionado no encerramento.
+
 ## Estrutura
 
-```text
-products/       inputs por produto
-templates/      regras visuais configuráveis
-config/         presets de render
-assets/         branding, música, fontes e SFX
-src/voc/        código do engine
-tests/          testes automatizados
-output/         vídeos gerados
-```
+- `products/VOC-XXX/`: fatos, roteiro, imagens e narração
+- `templates/voc_v1.json`: aparência, branding e mix
+- `config/preview.json`: 720p
+- `src/voc/`: engine sem conteúdo específico de produto
+- `assets/`: logo, fontes, música e SFX
+- `output/`: MP4 gerado
 
-O conteúdo específico de um produto não deve ser hardcoded em `src/`.
+Consulte `AUDIT_V0.1.md` para o checklist de validação final com os assets reais.
