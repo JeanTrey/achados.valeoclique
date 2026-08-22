@@ -1,0 +1,118 @@
+{
+  "target_sample_count": 50,
+  "notes": [
+    "This seed stores structural observations only; it does not copy or archive third-party creative media.",
+    "Records without timing fields are campaign-level references, not frame-level video measurements.",
+    "Do not report 50 analysed videos until 50 accessible creatives have actually been processed."
+  ],
+  "records": [
+    {
+      "id": "tt-topads-01",
+      "source": "https://ads.tiktok.com/business/creativecenter/tiktok-topads-spotlight/pc/pt",
+      "source_type": "tiktok_top_ads",
+      "signal": "top_20_percent_ctr_high_budget",
+      "hook_style": "comparison",
+      "native_content_score": 0.8,
+      "patterns": ["real_time_comparison", "show_value_visually", "feature_led_purchase_reason"]
+    },
+    {
+      "id": "tt-topads-02",
+      "source": "https://ads.tiktok.com/business/creativecenter/tiktok-topads-spotlight/pc/pt",
+      "source_type": "tiktok_top_ads",
+      "signal": "top_12_percent_ctr_high_budget",
+      "hook_style": "social_proof",
+      "native_content_score": 0.9,
+      "patterns": ["testimonials", "human_faces", "inclusive_cast"]
+    },
+    {
+      "id": "tt-topads-03",
+      "source": "https://ads.tiktok.com/business/creativecenter/tiktok-topads-spotlight/pc/pt",
+      "source_type": "tiktok_top_ads",
+      "signal": "top_12_percent_ctr_high_budget",
+      "hook_style": "comparison",
+      "native_content_score": 0.8,
+      "patterns": ["visible_difference", "show_not_tell", "product_superiority"]
+    },
+    {
+      "id": "tt-topads-04",
+      "source": "https://ads.tiktok.com/business/creativecenter/tiktok-topads-spotlight/pc/pt",
+      "source_type": "tiktok_top_ads",
+      "signal": "top_14_percent_ctr_high_budget",
+      "hook_style": "problem_question",
+      "native_content_score": 0.9,
+      "patterns": ["relatable_problem_first", "curiosity_before_product", "product_as_solution"]
+    },
+    {
+      "id": "tt-topads-05",
+      "source": "https://ads.tiktok.com/business/creativecenter/tiktok-topads-spotlight/pc/pt",
+      "source_type": "tiktok_top_ads",
+      "signal": "top_11_percent_ctr_medium_budget",
+      "hook_style": "sensory_interruption",
+      "native_content_score": 0.85,
+      "patterns": ["strong_opening_action", "sound_synced_motion", "rhythm_driven_transition"]
+    },
+    {
+      "id": "tt-awards-2024-shopee",
+      "source": "https://ads.tiktok.com/business/pt-BR/blog/tiktok-ad-awards-vencedores-2024",
+      "source_type": "award_case",
+      "signal": "winner_special_moment",
+      "hook_style": "entertainment_first",
+      "native_content_score": 0.95,
+      "patterns": ["native_entertainment", "music_as_memory_device", "offer_inside_entertainment"]
+    },
+    {
+      "id": "tt-awards-2024-creators",
+      "source": "https://ads.tiktok.com/business/pt-BR/blog/tiktok-ad-awards-vencedores-2024",
+      "source_type": "award_case",
+      "signal": "creator_work_winner",
+      "hook_style": "creator_native",
+      "native_content_score": 1.0,
+      "patterns": ["creator_native_delivery", "ad_reveal_late", "platform_native_tone"]
+    },
+    {
+      "id": "tt-awards-2024-sound",
+      "source": "https://ads.tiktok.com/business/pt-BR/blog/tiktok-ad-awards-vencedores-2024",
+      "source_type": "award_case",
+      "signal": "sound_winner",
+      "hook_style": "audio_hook",
+      "native_content_score": 0.95,
+      "patterns": ["recognizable_audio_motif", "sound_drives_pacing", "repeatable_memory_cue"]
+    },
+    {
+      "id": "tt-awards-2025-format",
+      "source": "https://ads.tiktok.com/business/pt-BR/blog/tiktok-ad-awards-vencedores-2025",
+      "source_type": "award_case",
+      "signal": "format_winner",
+      "hook_style": "native_format",
+      "native_content_score": 1.0,
+      "patterns": ["platform_native_format", "content_before_ad_feel", "format_matches_message"]
+    },
+    {
+      "id": "tt-awards-2025-business",
+      "source": "https://newsroom.tiktok.com/tiktok-anuncia-os-vencedores-do-ad-awards-2025?lang=pt-BR",
+      "source_type": "award_case",
+      "signal": "business_impact_winner",
+      "hook_style": "story_first",
+      "native_content_score": 0.95,
+      "patterns": ["story_before_pitch", "cultural_relevance", "business_goal_without_hard_sell"]
+    },
+    {
+      "id": "tt-guidance-spark",
+      "source": "https://ads.tiktok.com/business/library/guia_de_boas_praticas_ecommerce_no_TikTok.pdf",
+      "source_type": "platform_guidance",
+      "signal": "spark_ads_complete_view_lift",
+      "hook_style": "native_content",
+      "native_content_score": 1.0,
+      "patterns": ["organic_look", "native_creator_language", "avoid_obvious_ad_opening"]
+    },
+    {
+      "id": "community-2026-native",
+      "source": "https://www.reddit.com/r/rendaextra/comments/1ravqjw/dicas_para_quem_quer_come%C3%A7ar_no_tiktok_shop/",
+      "source_type": "community_experience",
+      "signal": "reported_800k_views_product_video",
+      "hook_style": "aesthetic_native",
+      "native_content_score": 0.95,
+      "patterns": ["less_ad_like", "aesthetic_first", "shareable_before_salesy"]
+    }
+  ]
+}
