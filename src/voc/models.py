@@ -27,6 +27,7 @@ class ProductData:
 @dataclass(frozen=True)
 class Scene:
     duration: float
+    creative_duration: float | None = None
     image: str | None = None
     text_primary: str | None = None
     text_secondary: str | None = None
