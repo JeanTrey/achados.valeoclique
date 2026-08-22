@@ -1,21 +1,21 @@
 {
   "name": "voc_v1",
   "safe_area": {"left_ratio": 0.07, "right_ratio": 0.07, "top_ratio": 0.07, "bottom_ratio": 0.15},
-  "background": {"mode": "blurred_image", "blur": 30, "brightness": 0.72, "contrast": 0.90},
-  "foreground": {"mode": "contain", "max_width_ratio": 0.90, "max_height_ratio": 0.58, "center_y_ratio": 0.45},
-  "logo": {"file": "logo.png", "top_ratio": 0.035, "max_width_ratio": 0.22},
-  "text_primary": {"size": 58, "min_size": 30, "color": [255, 255, 255], "stroke_color": [0, 0, 0], "stroke_width": 4},
-  "text_secondary": {"size": 38, "min_size": 24, "color": [255, 230, 0], "stroke_color": [0, 0, 0], "stroke_width": 3},
-  "cta": {"text": "VALE O CLIQUE?", "height_ratio": 0.095, "background_color": [255, 210, 0], "text_style": {"size": 48, "min_size": 30, "color": [20, 20, 20], "stroke_color": [255, 255, 255], "stroke_width": 0}},
+  "background": {"mode": "blurred_image", "blur": 34, "brightness": 0.60, "contrast": 0.94},
+  "foreground": {"mode": "contain", "max_width_ratio": 0.92, "max_height_ratio": 0.60, "center_y_ratio": 0.42},
+  "logo": {"file": "logo.png", "top_ratio": 0.025, "max_width_ratio": 0.18},
+  "text_primary": {"size": 62, "min_size": 34, "color": [255, 255, 255], "stroke_color": [10, 10, 10], "stroke_width": 5},
+  "hook_text": {"size": 72, "min_size": 42, "color": [255, 225, 0], "stroke_color": [8, 8, 8], "stroke_width": 6},
+  "price_text": {"size": 92, "min_size": 56, "color": [255, 225, 0], "stroke_color": [8, 8, 8], "stroke_width": 7},
+  "text_secondary": {"size": 36, "min_size": 24, "color": [255, 255, 255], "stroke_color": [0, 0, 0], "stroke_width": 3},
+  "cta": {"text": "VALE O CLIQUE?", "background_color": [255, 216, 0], "text_style": {"size": 54, "min_size": 34, "color": [18, 18, 18], "stroke_color": [255, 255, 255], "stroke_width": 0}},
   "audio": {
-    "narration_requested_db_min": 30,
-    "narration_requested_db_max": 40,
-    "normalization_metric": null,
     "narration_gain_db": 0.0,
-    "music_gain_db": -22.0,
-    "sfx_gain_db": -8.0,
+    "music_gain_db": -24.0,
+    "sfx_gain_db": -12.0,
     "end_click": "cursor_click.wav",
     "end_click_lead": 0.22,
-    "note": "A faixa 30-40 dB permanece como requisito de calibracao; dB isolado nao define peak/RMS/LUFS, portanto a V0.1 nao forca normalizacao arbitraria."
+    "target_narration_lufs": -16,
+    "note": "Scene timing follows measured TTS duration. SFX are sparse editorial accents; click is reserved for final CTA."
   }
 }
