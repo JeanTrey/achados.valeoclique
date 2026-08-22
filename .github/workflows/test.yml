@@ -1,13 +1,20 @@
-name: test
+name: test-and-render
 
 on:
   push:
-    branches: [main, feature/v0.1-foundation, feature/v0.1-autopilot-voc001]
+    branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      product_id:
+        description: Product ID to render
+        required: true
+        default: VOC-001
+        type: string
 
 jobs:
-  pytest:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,3 +35,41 @@ jobs:
         run: pytest -q
       - name: Hardcode audit
         run: '! grep -RniE "teclado|79[,\.]?90|10 metros" src'
+
+  render:
+    if: github.event_name != 'pull_request'
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      PRODUCT_ID: ${{ github.event.inputs.product_id || 'VOC-001' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Prepare product assets, narration, music and SFX
+        run: python prepare.py "$PRODUCT_ID"
+      - name: Render MP4
+        run: python render.py "$PRODUCT_ID"
+      - name: Validate rendered MP4
+        run: |
+          test -s "output/${PRODUCT_ID}.mp4"
+          ffprobe -v error \
+            -select_streams v:0 \
+            -show_entries stream=codec_name,width,height,r_frame_rate,pix_fmt \
+            -of default=noprint_wrappers=1 "output/${PRODUCT_ID}.mp4"
+          ffprobe -v error \
+            -select_streams a:0 \
+            -show_entries stream=codec_name,sample_rate,channels \
+            -of default=noprint_wrappers=1 "output/${PRODUCT_ID}.mp4"
+      - name: Upload rendered video
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PRODUCT_ID }}-mp4
+          path: output/${{ env.PRODUCT_ID }}.mp4
+          if-no-files-found: error
+          retention-days: 14
