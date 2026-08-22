@@ -1,0 +1,1 @@
+{"product_id":"VOC-002","template":"voc_v1","music":null,"scenes":[{"duration":1.0,"image":"01.jpg","text_primary":null,"text_secondary":null,"narration":null,"animation":"slow_zoom","sfx":null,"notes":"Bootstrap only. prepare.py replaces this with benchmark-driven scenes.","transition":"cut"}]}
