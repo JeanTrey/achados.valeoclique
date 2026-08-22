@@ -1,21 +1,16 @@
 {
   "name": "voc_v1",
   "safe_area": {"left_ratio": 0.07, "right_ratio": 0.07, "top_ratio": 0.07, "bottom_ratio": 0.15},
-  "background": {"mode": "blurred_image", "blur": 34, "brightness": 0.60, "contrast": 0.94},
-  "foreground": {"mode": "contain", "max_width_ratio": 0.92, "max_height_ratio": 0.60, "center_y_ratio": 0.42},
-  "logo": {"file": "logo.png", "top_ratio": 0.025, "max_width_ratio": 0.18},
-  "text_primary": {"size": 62, "min_size": 34, "color": [255, 255, 255], "stroke_color": [10, 10, 10], "stroke_width": 5},
-  "hook_text": {"size": 72, "min_size": 42, "color": [255, 225, 0], "stroke_color": [8, 8, 8], "stroke_width": 6},
-  "price_text": {"size": 92, "min_size": 56, "color": [255, 225, 0], "stroke_color": [8, 8, 8], "stroke_width": 7},
-  "text_secondary": {"size": 36, "min_size": 24, "color": [255, 255, 255], "stroke_color": [0, 0, 0], "stroke_width": 3},
-  "cta": {"text": "VALE O CLIQUE?", "background_color": [255, 216, 0], "text_style": {"size": 54, "min_size": 34, "color": [18, 18, 18], "stroke_color": [255, 255, 255], "stroke_width": 0}},
-  "audio": {
-    "narration_gain_db": 0.0,
-    "music_gain_db": -24.0,
-    "sfx_gain_db": -12.0,
-    "end_click": "cursor_click.wav",
-    "end_click_lead": 0.22,
-    "target_narration_lufs": -16,
-    "note": "Scene timing follows measured TTS duration. SFX are sparse editorial accents; click is reserved for final CTA."
-  }
+  "background": {"mode": "blurred_image", "blur": 38, "brightness": 0.52, "contrast": 1.02},
+  "foreground": {"mode": "contain", "max_width_ratio": 0.94, "max_height_ratio": 0.60, "center_y_ratio": 0.40},
+  "logo": {"file": "logo.png", "top_ratio": 0.024, "max_width_ratio": 0.16},
+  "cold_open_text": {"size": 78, "min_size": 48, "color": [255, 221, 0], "stroke_color": [5,5,5], "stroke_width": 7},
+  "tension_text": {"size": 55, "min_size": 34, "color": [255,255,255], "stroke_color": [0,0,0], "stroke_width": 0, "panel_color": [12,12,12]},
+  "reveal_text": {"size": 50, "min_size": 32, "color": [20,20,20], "stroke_color": [0,0,0], "stroke_width": 0, "panel_color": [255,221,0]},
+  "text_primary": {"size": 54, "min_size": 32, "color": [255,255,255], "stroke_color": [0,0,0], "stroke_width": 0, "panel_color": [12,12,12]},
+  "eyebrow_text": {"size": 27, "min_size": 22, "color": [255,255,255], "stroke_color": [0,0,0], "stroke_width": 2},
+  "price_text": {"size": 96, "min_size": 58, "color": [255,221,0], "stroke_color": [5,5,5], "stroke_width": 7},
+  "text_secondary": {"size": 34, "min_size": 24, "color": [255,255,255], "stroke_color": [0,0,0], "stroke_width": 2},
+  "cta": {"text": "VALE O CLIQUE?", "background_color": [255,221,0], "text_style": {"size": 55, "min_size": 36, "color": [20,20,20], "stroke_color": [0,0,0], "stroke_width": 0, "panel_color": [255,221,0]}},
+  "audio": {"narration_gain_db": 0.0, "music_gain_db": -24.0, "sfx_gain_db": -12.0, "end_click": "cursor_click.wav", "end_click_lead": 0.22, "target_narration_lufs": -16, "note": "Narration owns scene timing. SFX only at editorial accents and final click."}
 }
