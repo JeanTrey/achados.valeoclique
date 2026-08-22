@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+output/*.mp4
+output/*.mov
+.DS_Store

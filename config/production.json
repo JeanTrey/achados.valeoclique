@@ -1,0 +1,1 @@
+{"width": 1080, "height": 1920, "fps": 30, "video_codec": "libx264", "pixel_format": "yuv420p", "audio_codec": "aac", "crf": 20, "preset": "medium", "audio_bitrate": "192k"}
