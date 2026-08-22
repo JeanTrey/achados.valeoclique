@@ -1,16 +1,1 @@
-{
-  "product_id": "VOC-001",
-  "template": "voc_v1",
-  "scenes": [
-    {
-      "duration": 3.0,
-      "image": null,
-      "text_primary": null,
-      "text_secondary": null,
-      "narration": null,
-      "animation": "none",
-      "sfx": null,
-      "notes": "Cena estrutural para validar o loader; conteúdo editorial será preenchido em fase posterior."
-    }
-  ]
-}
+{"product_id": "VOC-001", "template": "voc_v1", "music": null, "scenes": [{"duration": 3.0, "image": "01.jpg", "text_primary": null, "text_secondary": null, "narration": null, "animation": "slow_zoom", "sfx": null, "notes": "Substituir pelos assets e roteiro auditados do VOC-001.", "transition": "cut"}]}
