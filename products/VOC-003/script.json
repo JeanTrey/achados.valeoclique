@@ -1,0 +1,18 @@
+{
+  "product_id": "VOC-003",
+  "template": "voc_v1",
+  "music": null,
+  "scenes": [
+    {
+      "duration": 1.2,
+      "image": null,
+      "text_primary": "STORYBOARD FIRST",
+      "text_secondary": null,
+      "narration": null,
+      "animation": "pop",
+      "sfx": null,
+      "notes": "bootstrap only; make_storyboard.py creates the actual creative plan",
+      "transition": "cut"
+    }
+  ]
+}
