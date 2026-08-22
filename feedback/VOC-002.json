@@ -1,0 +1,32 @@
+{
+  "video_id": "VOC-002",
+  "verdict": "rejected_strong",
+  "scores": {
+    "overall": 1,
+    "hook": 1,
+    "visual_design": 1,
+    "asset_variety": 1,
+    "typography": 1,
+    "color_comfort": 1,
+    "automation_individuality": 1
+  },
+  "reject": [
+    "single_catalogue_image_as_whole_video",
+    "slideshow_feel",
+    "benchmark_claim_without_real_video_analysis",
+    "giant_generic_text",
+    "poor_font_hierarchy",
+    "harsh_yellow_black_contrast",
+    "reused_previous_video_visual_language",
+    "manual_asset_dependency",
+    "not_product_specific_enough"
+  ],
+  "requirements": [
+    "collect_product_assets automatically from source URL",
+    "derive multiple truthful crops and closeups automatically",
+    "use product-aware palette and role-specific layouts",
+    "only count benchmarks when actual video media was processed",
+    "preserve third-party benchmark features but not copied media",
+    "make product imagery the hero and keep copy compact"
+  ]
+}
