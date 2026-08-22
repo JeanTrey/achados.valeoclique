@@ -12,6 +12,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from voc.assets_import import download_product_images
+from voc.benchmark import write_profile
 from voc.creative import generate_creative_scenes
 from voc.creative_memory import load_creative_memory, summarize_feedback
 from voc.loader import load_project
@@ -43,13 +44,14 @@ def main() -> int:
     project = load_project(ROOT, args.product_id, "preview")
     memory = load_creative_memory(ROOT)
     feedback_summary = summarize_feedback(ROOT)
+    benchmark = write_profile(ROOT)
 
     source_images = project.product.extra.get("source_images", [])
     if source_images and not args.no_download:
         recovered = download_product_images(project.product_dir, [str(url) for url in source_images])
         print(f"Recovered {len(recovered)} product image(s)")
 
-    scenes = generate_creative_scenes(project.product, memory)
+    scenes = generate_creative_scenes(project.product, memory, benchmark)
     images = _pick_images(project.product_dir, len(scenes))
     audio_dir = project.product_dir / "audio"
     audio_dir.mkdir(parents=True, exist_ok=True)
@@ -80,12 +82,20 @@ def main() -> int:
             "feedback_avg_overall": feedback_summary["avg_overall"],
             "known_rejected_patterns": feedback_summary["rejected_patterns"],
         },
+        "benchmark_learning": {
+            "sample_count": benchmark.sample_count,
+            "confidence": benchmark.confidence,
+            "preferred_hook_style": benchmark.preferred_hook_style,
+            "product_reveal_target_s": benchmark.product_reveal_target_s,
+            "target_duration_s": benchmark.target_duration_s,
+            "patterns": list(benchmark.patterns),
+        },
         "scenes": script_scenes,
     }
     report = audit_script(script)
     script["creative_audit"] = {"score": report.score, "passed": report.passed, "issues": list(report.issues)}
     (project.product_dir / "script.json").write_text(json.dumps(script, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Prepared {project.product.id}: {len(scenes)} scenes, {duration:.2f}s | retention score={report.score} | feedback reviews={feedback_summary['reviews']}")
+    print(f"Prepared {project.product.id}: {len(scenes)} scenes, {duration:.2f}s | retention score={report.score} | feedback reviews={feedback_summary['reviews']} | benchmark samples={benchmark.sample_count}")
     for issue in report.issues:
         print(f"CREATIVE WARNING: {issue}")
     if not report.passed:
