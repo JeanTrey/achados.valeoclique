@@ -1,4 +1,4 @@
-name: test-and-render
+name: test-and-storyboard
 
 on:
   push:
@@ -8,10 +8,15 @@ on:
   workflow_dispatch:
     inputs:
       product_id:
-        description: Product ID to render
+        description: Product ID to direct
         required: true
-        default: VOC-002
+        default: VOC-003
         type: string
+      render_approved:
+        description: Render MP4 after storyboard review
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   test:
@@ -26,11 +31,12 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
       - name: Compile
-        run: python -m compileall -q src render.py prepare.py analyze_benchmarks.py collect_benchmarks.py
+        run: python -m compileall -q src render.py prepare.py make_storyboard.py analyze_benchmarks.py collect_benchmarks.py
       - name: Validate fixtures
         run: |
           python render.py VOC-001 --validate-only
           python render.py VOC-002 --validate-only
+          python render.py VOC-003 --validate-only
       - name: Test creative preparation without network
         run: python prepare.py VOC-001 --no-tts --no-download
       - name: Test
@@ -38,13 +44,13 @@ jobs:
       - name: Hardcode audit
         run: '! grep -RniE "teclado|79[,\.]?90|10 metros" src'
 
-  render:
+  creative:
     if: github.event_name != 'pull_request'
     needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      PRODUCT_ID: ${{ github.event.inputs.product_id || 'VOC-002' }}
+      PRODUCT_ID: ${{ github.event.inputs.product_id || 'VOC-003' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -54,6 +60,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+
       - name: Discover public benchmark candidates
         run: python collect_benchmarks.py --target 80
       - name: Analyse up to 50 real benchmark videos
@@ -69,27 +76,36 @@ jobs:
             benchmarks/generated_records.json
           if-no-files-found: warn
           retention-days: 14
-      - name: Prepare product-specific assets, direction, narration, music and SFX
-        run: python prepare.py "$PRODUCT_ID"
-      - name: Upload creative diagnostics
+
+      - name: Build creative plan and storyboard
+        run: python make_storyboard.py "$PRODUCT_ID"
+      - name: Upload storyboard for human review
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PRODUCT_ID }}-diagnostics
+          name: ${{ env.PRODUCT_ID }}-storyboard
           path: |
-            products/${{ env.PRODUCT_ID }}/script.json
-            memory/benchmark_profile.json
+            products/${{ env.PRODUCT_ID }}/creative_plan.json
+            products/${{ env.PRODUCT_ID }}/storyboard/
             products/${{ env.PRODUCT_ID }}/images/derived/
-          if-no-files-found: warn
+            memory/benchmark_profile.json
+          if-no-files-found: error
           retention-days: 14
-      - name: Render MP4
+
+      - name: Prepare approved video assets and audio
+        if: github.event_name == 'workflow_dispatch' && inputs.render_approved == true
+        run: python prepare.py "$PRODUCT_ID"
+      - name: Render approved MP4
+        if: github.event_name == 'workflow_dispatch' && inputs.render_approved == true
         run: python render.py "$PRODUCT_ID"
-      - name: Validate rendered MP4
+      - name: Validate approved MP4
+        if: github.event_name == 'workflow_dispatch' && inputs.render_approved == true
         run: |
           test -s "output/${PRODUCT_ID}.mp4"
           ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,r_frame_rate,pix_fmt -of default=noprint_wrappers=1 "output/${PRODUCT_ID}.mp4"
           ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,sample_rate,channels -of default=noprint_wrappers=1 "output/${PRODUCT_ID}.mp4"
-      - name: Upload rendered video
+      - name: Upload approved video
+        if: github.event_name == 'workflow_dispatch' && inputs.render_approved == true
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PRODUCT_ID }}-mp4
