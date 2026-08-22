@@ -1,0 +1,30 @@
+{
+  "name": "voc_v1",
+  "background": {
+    "mode": "blurred_image",
+    "blur": 32,
+    "scale": 1.18,
+    "brightness": 0.82
+  },
+  "foreground_image": {
+    "fit": "contain",
+    "max_width_ratio": 0.92,
+    "max_height_ratio": 0.62
+  },
+  "safe_area": {
+    "top_ratio": 0.08,
+    "bottom_ratio": 0.16,
+    "left_ratio": 0.06,
+    "right_ratio": 0.06
+  },
+  "branding": {
+    "logo": "assets/branding/logo.png",
+    "closing_text": "VALE O CLIQUE?",
+    "closing_sfx": "assets/sfx/cursor_click.wav"
+  },
+  "audio": {
+    "narration_requested_db_min": 30,
+    "narration_requested_db_max": 40,
+    "normalization_metric": null
+  }
+}
