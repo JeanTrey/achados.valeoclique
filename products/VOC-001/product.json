@@ -8,6 +8,11 @@
   "vendidos": null,
   "marca": "Inova",
   "modelo": "KV-789",
+  "source_url_original": "https://br.shp.ee/nfssRULD",
+  "source_url_recovered": "https://shopee.com.br/Kit-Teclado-e-Mouse-Sem-Fio-Inova-KV-789-Wireless-2.4GHz-USB-i.1067608317.58215056637",
+  "source_images": [
+    "https://down-br.img.susercontent.com/file/br-11134207-820lu-mnv85f6i0xkxc8"
+  ],
   "caracteristicas": [
     {"texto": "conexão sem fio 2.4 GHz por receptor USB", "source_type": "seller_claim"},
     {"texto": "layout ABNT2 com 107 teclas", "source_type": "seller_claim"},
@@ -18,6 +23,7 @@
   "observacoes": [
     "Marca/modelo recuperados visualmente do VOC-001 e confirmados em anúncios públicos do KV-789.",
     "R$ 79,00 é o preço registrado no VOC-001 manual em 21/08/2026; revalidar antes de nova publicação.",
-    "Alegações técnicas permanecem marcadas como seller_claim."
+    "Alegações técnicas permanecem marcadas como seller_claim.",
+    "source_images contém somente URLs explicitamente recuperadas; o importador não inventa imagens ausentes."
   ]
 }
