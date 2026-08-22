@@ -2,9 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Iterable
-
 from .models import ProductData
-
 
 @dataclass(frozen=True)
 class CreativeScene:
@@ -21,35 +19,25 @@ def _seller_claim(text: str) -> str:
     return f"Segundo o anúncio, {text[0].lower() + text[1:] if text else text}."
 
 
-def _short_display(text: str, max_words: int = 6) -> str:
-    words = text.strip().rstrip(".").split()
-    return " ".join(words[:max_words]).upper()
+def _short_display(text: str, max_words: int = 5) -> str:
+    return " ".join(text.strip().rstrip(".").split()[:max_words]).upper()
 
 
 def generate_creative_scenes(product: ProductData) -> tuple[CreativeScene, ...]:
-    """Generate a compact ad-shaped structure without inventing product facts.
-
-    Screen copy is deliberately shorter than narration. SFX are editorial accents,
-    not transition markers. Scene duration is a minimum; prepare.py expands it to
-    fit measured narration before rendering.
-    """
+    """Create a short-form ad arc: interruption -> tension -> reveal -> proof -> offer -> CTA."""
     name = product.name or "este produto"
     scenes: list[CreativeScene] = [
-        CreativeScene(2.6, "SEM FIO. SEM BAGUNÇA.", f"Olha esse {name}.", "pop", "woosh.wav", "hook")
+        CreativeScene(1.35, "AINDA PRESO NOS FIOS?", "Seu setup ainda está preso nos fios?", "pop", "woosh.wav", "cold_open"),
+        CreativeScene(1.65, "DÁ PRA LIMPAR ISSO.", "Dá para deixar a mesa bem mais limpa.", "quick_zoom", None, "tension"),
+        CreativeScene(2.4, "CONHEÇA O KIT", f"Esse é o {name}.", "pop", None, "reveal"),
     ]
-
-    # Two proof points are enough for a sub-20-second ad. More facts belong in
-    # product data, not automatically on screen.
     for claim in product.features[:2]:
         narration = _seller_claim(claim.text) if claim.source_type == "seller_claim" else claim.text.rstrip(".") + "."
-        scenes.append(CreativeScene(3.0, _short_display(claim.text), narration, "pan_zoom", None, "proof"))
-
+        scenes.append(CreativeScene(2.7, _short_display(claim.text), narration, "pan_zoom", None, "proof"))
     if product.price is not None:
         price_text = f"R$ {product.price:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        narration = f"O preço registrado no material era {price_text}."
-        scenes.append(CreativeScene(3.0, price_text, narration, "slow_zoom", None, "price"))
-
-    scenes.append(CreativeScene(2.4, "VALE O CLIQUE?", "E aí, vale o clique?", "pop", None, "cta"))
+        scenes.append(CreativeScene(2.8, price_text, f"O preço registrado no material era {price_text}.", "slow_zoom", None, "price"))
+    scenes.append(CreativeScene(2.2, "VALE O CLIQUE?", "E aí, vale o clique?", "pop", None, "cta"))
     return tuple(scenes)
 
 
