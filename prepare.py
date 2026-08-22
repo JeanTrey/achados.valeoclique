@@ -15,6 +15,7 @@ from voc.assets_import import download_product_images
 from voc.creative import generate_creative_scenes
 from voc.loader import load_project
 from voc.narration import synthesize_edge_tts, write_narration_manifest
+from voc.retention import audit_script
 from voc.sound_design import ensure_default_sfx, generate_music_bed
 
 
@@ -27,10 +28,7 @@ def _pick_images(product_dir: Path, count: int) -> list[str | None]:
 
 
 def _audio_duration(path: Path) -> float:
-    result = subprocess.run([
-        "ffprobe", "-v", "error", "-show_entries", "format=duration",
-        "-of", "default=noprint_wrappers=1:nokey=1", str(path)
-    ], check=True, capture_output=True, text=True)
+    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(path)], check=True, capture_output=True, text=True)
     return float(result.stdout.strip())
 
 
@@ -41,7 +39,6 @@ def main() -> int:
     parser.add_argument("--no-tts", action="store_true")
     parser.add_argument("--no-download", action="store_true")
     args = parser.parse_args()
-
     project = load_project(ROOT, args.product_id, "preview")
     source_images = project.product.extra.get("source_images", [])
     if source_images and not args.no_download:
@@ -53,7 +50,6 @@ def main() -> int:
     audio_dir = project.product_dir / "audio"
     audio_dir.mkdir(parents=True, exist_ok=True)
     ensure_default_sfx(ROOT)
-
     script_scenes = []
     for i, (scene, image) in enumerate(zip(scenes, images), start=1):
         narration_file = f"scene_{i:02d}.mp3"
@@ -62,24 +58,21 @@ def main() -> int:
         duration = scene.duration
         if not args.no_tts:
             synthesize_edge_tts(scene.narration_text, narration_path, voice=args.voice, rate="+12%")
-            # Narration owns the clock. 420 ms breathing room prevents overlap and
-            # gives the edit a deliberate cadence instead of racing the voice.
             duration = max(duration, _audio_duration(narration_path) + 0.42)
-        script_scenes.append({
-            "duration": round(duration, 3), "image": image,
-            "text_primary": scene.text_primary, "text_secondary": None,
-            "narration": narration_file if not args.no_tts else None,
-            "animation": scene.animation, "sfx": scene.sfx,
-            "notes": f"auto-generated ad scene; role={scene.role}; review before publishing",
-            "transition": "cut"
-        })
+        script_scenes.append({"duration": round(duration, 3), "image": image, "text_primary": scene.text_primary, "text_secondary": None, "narration": narration_file if not args.no_tts else None, "animation": scene.animation, "sfx": scene.sfx, "notes": f"auto-generated ad scene; role={scene.role}; review before publishing", "transition": "cut"})
 
     duration = sum(float(scene["duration"]) for scene in script_scenes)
     music_name = "voc_original_bed.wav"
     generate_music_bed(ROOT / "assets" / "music" / music_name, duration=duration)
     script = {"product_id": project.product.id, "template": project.script.template, "music": music_name, "scenes": script_scenes}
+    report = audit_script(script)
+    script["creative_audit"] = {"score": report.score, "passed": report.passed, "issues": list(report.issues)}
     (project.product_dir / "script.json").write_text(json.dumps(script, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Prepared {project.product.id}: {len(scenes)} scenes, {duration:.2f}s")
+    print(f"Prepared {project.product.id}: {len(scenes)} scenes, {duration:.2f}s | retention score={report.score}")
+    for issue in report.issues:
+        print(f"CREATIVE WARNING: {issue}")
+    if not report.passed:
+        raise SystemExit("Creative retention gate failed; fix script before render")
     return 0
 
 
