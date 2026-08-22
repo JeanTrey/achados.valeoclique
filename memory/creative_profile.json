@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "hook_max_words": 5,
+  "max_proof_scenes": 2,
+  "max_sfx_before_cta": 1,
+  "narration_breathing_room_s": 0.42,
+  "preferred_hook_style": "problem_question",
+  "approved_patterns": [
+    "cold open before product reveal",
+    "short screen copy",
+    "narration owns scene timing",
+    "sfx used as editorial accent only",
+    "price gets its own visual hierarchy",
+    "cta appears at the end"
+  ],
+  "avoid_patterns": [
+    "narration overlap",
+    "woosh on every image change",
+    "permanent CTA banner",
+    "feature dump",
+    "generic white text on every scene",
+    "opening that feels like the middle of the ad"
+  ]
+}
