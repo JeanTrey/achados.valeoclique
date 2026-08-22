@@ -4,12 +4,10 @@ import html
 import re
 import urllib.request
 from pathlib import Path
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 from .assets_import import ALLOWED_HOSTS, download_product_images
 
-
-URL_RE = re.compile(r"https://[^\"'\\ ]+(?:img\.susercontent\.com|shopee[^\"'\\ ]*)[^\"'\\ ]*", re.I)
 IMAGE_ID_RE = re.compile(r"(?:image|image_id|imageId)[\"']?\s*[:=]\s*[\"']([A-Za-z0-9_-]{20,})[\"']", re.I)
 
 
@@ -25,7 +23,6 @@ def _fetch(url: str) -> tuple[str, str]:
 
 
 def discover_shopee_image_urls(source_url: str, max_images: int = 12) -> tuple[str, list[str]]:
-    """Best-effort public-page discovery. Returns provenance-bearing URLs only."""
     final_url, body = _fetch(source_url)
     body = html.unescape(body).replace("\\/", "/")
     found: list[str] = []
@@ -33,7 +30,6 @@ def discover_shopee_image_urls(source_url: str, max_images: int = 12) -> tuple[s
         parsed = urlparse(match)
         if parsed.hostname in ALLOWED_HOSTS and "/file/" in parsed.path:
             found.append(match.split("?")[0])
-    # Shopee frequently embeds only file IDs in hydration JSON.
     for image_id in IMAGE_ID_RE.findall(body):
         found.append(f"https://down-br.img.susercontent.com/file/{image_id}")
     deduped: list[str] = []
@@ -57,6 +53,17 @@ def recover_product_assets(product_dir: Path, source_urls: list[str], recorded_u
     for url in candidates:
         if url not in deduped:
             deduped.append(url)
-    if not deduped:
-        return []
-    return download_product_images(product_dir, deduped[:12])
+    downloaded: list[str] = []
+    # Gallery HTML can contain stale/preload IDs. One failed image must not kill
+    # the entire product import.
+    for url in deduped[:16]:
+        try:
+            names = download_product_images(product_dir, [url])
+        except Exception:
+            continue
+        for name in names:
+            if name not in downloaded:
+                downloaded.append(name)
+        if len(downloaded) >= 12:
+            break
+    return downloaded
