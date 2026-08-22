@@ -2,7 +2,7 @@ name: test
 
 on:
   push:
-    branches: [main, feature/v0.1-foundation]
+    branches: [main, feature/v0.1-foundation, feature/v0.1-autopilot-voc001]
   pull_request:
     branches: [main]
 
@@ -19,9 +19,11 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
       - name: Compile
-        run: python -m compileall -q src render.py
+        run: python -m compileall -q src render.py prepare.py
       - name: Validate fixture
         run: python render.py VOC-001 --validate-only
+      - name: Test creative preparation without network
+        run: python prepare.py VOC-001 --no-tts --no-download
       - name: Test
         run: pytest -q
       - name: Hardcode audit
