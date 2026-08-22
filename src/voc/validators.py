@@ -18,6 +18,12 @@ def _opt_string(obj: dict[str, Any], key: str, label: str) -> None:
         raise ValidationError(f"{label}.{key} must be a string or null")
 
 
+def _opt_positive_number(obj: dict[str, Any], key: str, label: str) -> None:
+    value = obj.get(key)
+    if value is not None and (not isinstance(value, (int, float)) or isinstance(value, bool) or value <= 0):
+        raise ValidationError(f"{label}.{key} must be > 0 or null")
+
+
 def validate_product(data: Any) -> dict[str, Any]:
     product = _require_dict(data, "product")
     if not isinstance(product.get("id"), str) or not product["id"].strip():
@@ -37,7 +43,7 @@ def validate_script(data: Any) -> dict[str, Any]:
     scenes = script.get("scenes")
     if not isinstance(scenes, list) or not scenes:
         raise ValidationError("script.scenes must be a non-empty array")
-    allowed = {"duration", "image", "text_primary", "text_secondary", "narration", "animation", "sfx", "notes", "transition"}
+    allowed = {"duration", "creative_duration", "image", "text_primary", "text_secondary", "narration", "animation", "sfx", "notes", "transition"}
     for index, scene in enumerate(scenes):
         if not isinstance(scene, dict):
             raise ValidationError(f"script.scenes[{index}] must be an object")
@@ -47,7 +53,8 @@ def validate_script(data: Any) -> dict[str, Any]:
         duration = scene.get("duration")
         if not isinstance(duration, (int, float)) or isinstance(duration, bool) or duration <= 0:
             raise ValidationError(f"script.scenes[{index}].duration must be > 0")
-        for key in allowed - {"duration"}:
+        _opt_positive_number(scene, "creative_duration", f"script.scenes[{index}]")
+        for key in allowed - {"duration", "creative_duration"}:
             _opt_string(scene, key, f"script.scenes[{index}]")
     return script
 
