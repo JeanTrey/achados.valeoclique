@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
       - name: Compile
-        run: python -m compileall -q src render.py prepare.py analyze_benchmarks.py
+        run: python -m compileall -q src render.py prepare.py analyze_benchmarks.py collect_benchmarks.py
       - name: Validate fixtures
         run: |
           python render.py VOC-001 --validate-only
@@ -42,6 +42,7 @@ jobs:
     if: github.event_name != 'pull_request'
     needs: test
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
       PRODUCT_ID: ${{ github.event.inputs.product_id || 'VOC-002' }}
     steps:
@@ -53,7 +54,22 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
-      - name: Prepare benchmark profile, product assets, narration, music and SFX
+      - name: Discover public benchmark candidates
+        run: python collect_benchmarks.py --target 80
+      - name: Analyse up to 50 real benchmark videos
+        continue-on-error: true
+        run: python analyze_benchmarks.py --max 50 --workers 6
+      - name: Upload benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-evidence
+          path: |
+            benchmarks/candidate_urls.json
+            benchmarks/generated_records.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Prepare product-specific assets, direction, narration, music and SFX
         run: python prepare.py "$PRODUCT_ID"
       - name: Upload creative diagnostics
         if: always()
@@ -63,6 +79,7 @@ jobs:
           path: |
             products/${{ env.PRODUCT_ID }}/script.json
             memory/benchmark_profile.json
+            products/${{ env.PRODUCT_ID }}/images/derived/
           if-no-files-found: warn
           retention-days: 14
       - name: Render MP4
@@ -70,14 +87,8 @@ jobs:
       - name: Validate rendered MP4
         run: |
           test -s "output/${PRODUCT_ID}.mp4"
-          ffprobe -v error \
-            -select_streams v:0 \
-            -show_entries stream=codec_name,width,height,r_frame_rate,pix_fmt \
-            -of default=noprint_wrappers=1 "output/${PRODUCT_ID}.mp4"
-          ffprobe -v error \
-            -select_streams a:0 \
-            -show_entries stream=codec_name,sample_rate,channels \
-            -of default=noprint_wrappers=1 "output/${PRODUCT_ID}.mp4"
+          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,r_frame_rate,pix_fmt -of default=noprint_wrappers=1 "output/${PRODUCT_ID}.mp4"
+          ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,sample_rate,channels -of default=noprint_wrappers=1 "output/${PRODUCT_ID}.mp4"
       - name: Upload rendered video
         uses: actions/upload-artifact@v4
         with:
