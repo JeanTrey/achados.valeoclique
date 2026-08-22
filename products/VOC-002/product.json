@@ -1,0 +1,28 @@
+{
+  "id": "VOC-002",
+  "nome": "Kit Teclado e Mouse Sem Fio Inova KV-789",
+  "preco": 79.0,
+  "preco_consultado_em": "2026-08-21",
+  "avaliacao": null,
+  "quantidade_avaliacoes": null,
+  "vendidos": null,
+  "marca": "Inova",
+  "modelo": "KV-789",
+  "source_url_original": "https://br.shp.ee/nfssRULD",
+  "source_url_recovered": "https://shopee.com.br/Kit-Teclado-e-Mouse-Sem-Fio-Inova-KV-789-Wireless-2.4GHz-USB-i.1067608317.58215056637",
+  "source_images": [
+    "https://down-br.img.susercontent.com/file/br-11134207-820lu-mnv85f6i0xkxc8"
+  ],
+  "caracteristicas": [
+    {"texto": "conexão sem fio 2.4 GHz por receptor USB", "source_type": "seller_claim"},
+    {"texto": "layout ABNT2 com 107 teclas", "source_type": "seller_claim"},
+    {"texto": "alcance de até 10 metros", "source_type": "seller_claim"},
+    {"texto": "design resistente a respingos", "source_type": "seller_claim"},
+    {"texto": "instalação plug and play", "source_type": "seller_claim"}
+  ],
+  "observacoes": [
+    "VOC-002 é um experimento controlado do mesmo produto do VOC-001 para isolar o efeito do Benchmark Learning + Creative Memory.",
+    "Nenhuma alegação técnica foi promovida de seller_claim para fato verificado.",
+    "R$ 79,00 permanece apenas como preço histórico registrado em 21/08/2026."
+  ]
+}
