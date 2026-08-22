@@ -1,13 +1,1 @@
-{
-  "id": "VOC-001",
-  "nome": null,
-  "preco": null,
-  "preco_consultado_em": null,
-  "avaliacao": null,
-  "quantidade_avaliacoes": null,
-  "vendidos": null,
-  "caracteristicas": [],
-  "observacoes": [
-    "Fixture estrutural da Foundation. Dados factuais do produto ainda não foram importados."
-  ]
-}
+{"id": "VOC-001", "nome": null, "preco": null, "preco_consultado_em": null, "avaliacao": null, "quantidade_avaliacoes": null, "vendidos": null, "caracteristicas": [], "observacoes": ["Fixture estrutural: preencher somente com dados verificados do anuncio."]}
