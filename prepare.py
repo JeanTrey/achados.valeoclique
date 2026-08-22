@@ -61,11 +61,25 @@ def main() -> int:
         narration_file = f"scene_{i:02d}.mp3"
         narration_path = audio_dir / narration_file
         write_narration_manifest(scene.narration_text, narration_path)
-        duration = scene.duration
+        creative_duration = scene.duration
+        duration = creative_duration
         if not args.no_tts:
-            synthesize_edge_tts(scene.narration_text, narration_path, voice=args.voice, rate="+12%")
-            duration = max(duration, _audio_duration(narration_path) + memory.narration_breathing_room_s)
-        script_scenes.append({"duration": round(duration, 3), "image": image, "text_primary": scene.text_primary, "text_secondary": None, "narration": narration_file if not args.no_tts else None, "animation": scene.animation, "sfx": scene.sfx, "notes": f"auto-generated ad scene; role={scene.role}; review before publishing", "transition": "cut"})
+            # Short-form delivery: quicker than the old +12%, while scene length
+            # still expands safely if speech needs more room.
+            synthesize_edge_tts(scene.narration_text, narration_path, voice=args.voice, rate="+24%")
+            duration = max(creative_duration, _audio_duration(narration_path) + memory.narration_breathing_room_s)
+        script_scenes.append({
+            "duration": round(duration, 3),
+            "creative_duration": round(creative_duration, 3),
+            "image": image,
+            "text_primary": scene.text_primary,
+            "text_secondary": None,
+            "narration": narration_file if not args.no_tts else None,
+            "animation": scene.animation,
+            "sfx": scene.sfx,
+            "notes": f"auto-generated ad scene; role={scene.role}; review before publishing",
+            "transition": "cut"
+        })
 
     duration = sum(float(scene["duration"]) for scene in script_scenes)
     music_name = "voc_original_bed.wav"
